@@ -1,38 +1,22 @@
-function makeBg () {
-    mySprite3 = sprites.create(assets.image`bg2`, SpriteKind.Player)
-    words1 = sprites.create(assets.image`startText1`, SpriteKind.Player)
-    words2 = sprites.create(assets.image`startText1`, SpriteKind.Player)
-    words3 = sprites.create(assets.image`startText1`, SpriteKind.Player)
-    words4 = sprites.create(assets.image`startText1`, SpriteKind.Player)
-    words5 = sprites.create(assets.image`startText2`, SpriteKind.Player)
-    words = [
-    words1,
-    words2,
-    words3,
-    words4,
-    words5
-    ]
-    mySprite5 = sprites.create(assets.image`bg3`, SpriteKind.Player)
-    mySprite2 = sprites.create(assets.image`TitleCard`, SpriteKind.Player)
-    mySprite2.setVelocity(20, 20)
-    mySprite2.setBounceOnWall(true)
-    mySprite2.setStayInScreen(true)
-    mySprite2.setPosition(82, 55)
-}
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    Render.setViewMode(ViewMode.tilemapView)
+    Render.toggleViewMode()
+    tiles.setCurrentTilemap(tilemap`level2`)
+})
 function map () {
 	
 }
+let words5 = 0
+let mySprite4: Sprite = null
 let wordHeight: number[] = []
-let mySprite2: Sprite = null
-let mySprite5: Sprite = null
-let words: Sprite[] = []
-let words5: Sprite = null
-let words4: Sprite = null
-let words3: Sprite = null
-let words2: Sprite = null
-let words1: Sprite = null
-let mySprite3: Sprite = null
+let tempVY = 0
+let tempVX = 0
+let tempY = 0
+let tempX = 0
+let _scoreHappy = 0
+let _scoreSpeed = 0
 music.play(music.createSong(hex`0078000408020300001c00010a006400f401640000040000000000000000000000000005000004370000000400012908000c0002252910001400012924002800012228002c0001252c003000012930003400012538003c0001253c004000012205001c000f0a006400f4010a0000040000000000000000000000000000000002060018001c00012906001c00010a006400f4016400000400000000000000000000000000000000023e000000040002111e0c00100002111e1000140002111e18001c0002142020002400020f1d24002800020f1d30003400011d34003800011238003c00030f1d20`), music.PlaybackMode.LoopingInBackground)
+tiles.setCurrentTilemap(tilemap`level4`)
 scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
@@ -155,7 +139,12 @@ scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     `)
-tiles.setCurrentTilemap(tilemap`level4`)
+let bgLargeWindow = sprites.create(assets.image`bg2`, SpriteKind.Player)
+let bgSmallWindow = sprites.create(assets.image`bg3`, SpriteKind.Player)
+let bgBounceText = sprites.create(assets.image`TitleCard`, SpriteKind.Player)
+bgBounceText.setBounceOnWall(true)
+bgBounceText.setStayInScreen(true)
+bgBounceText.setVelocity(20, 20)
 let OliverOink = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -175,21 +164,50 @@ let OliverOink = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Player)
 OliverOink = Render.getRenderSpriteVariable()
+color.setPalette(
+color.Matte
+)
 Render.move(OliverOink, 60)
 Render.setViewMode(ViewMode.raycastingView)
 Render.toggleViewMode()
-makeBg()
+let words = [
+assets.image`startText1`,
+assets.image`startText0`,
+assets.image`startText2`,
+assets.image`startText0`,
+assets.image`startText0`,
+assets.image`startText0`,
+assets.image`startText0`,
+assets.image`startText0`,
+assets.image`startText0`
+]
 game.onUpdateInterval(2000, function () {
+    tempX = bgBounceText.x
+    tempY = bgBounceText.y
+    tempVX = bgBounceText.vx
+    tempVY = bgBounceText.vy
     wordHeight = [
     22,
     28,
     34,
     40,
-    46
+    46,
+    53,
+    59,
+    65,
+    71
     ]
     for (let value of words) {
-        value.setPosition(80, wordHeight.removeAt(randint(0, wordHeight.length)))
+        mySprite4 = sprites.create(value, SpriteKind.Player)
+        words5 = randint(0, wordHeight.length)
+        mySprite4.setPosition(80, wordHeight[words5])
+        wordHeight.removeAt(words5)
+        mySprite4.lifespan = 2200
     }
+    bgSmallWindow = sprites.create(assets.image`bg3`, SpriteKind.Player)
+    bgBounceText = sprites.create(assets.image`TitleCard`, SpriteKind.Player)
+    bgBounceText.setPosition(tempX, tempY)
+    bgBounceText.setVelocity(tempVX, tempVY)
 })
 forever(function () {
     music.play(music.createSoundEffect(WaveShape.Sine, 3205, 2849, 54, 50, 50, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.UntilDone)
