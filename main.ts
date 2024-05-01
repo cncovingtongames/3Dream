@@ -1,29 +1,38 @@
-function map () {
-    mySprite = 0
-    mySprite = 0
+function makeBg () {
+    mySprite3 = sprites.create(assets.image`bg2`, SpriteKind.Player)
+    words1 = sprites.create(assets.image`startText1`, SpriteKind.Player)
+    words2 = sprites.create(assets.image`startText1`, SpriteKind.Player)
+    words3 = sprites.create(assets.image`startText1`, SpriteKind.Player)
+    words4 = sprites.create(assets.image`startText1`, SpriteKind.Player)
+    words5 = sprites.create(assets.image`startText2`, SpriteKind.Player)
+    words = [
+    words1,
+    words2,
+    words3,
+    words4,
+    words5
+    ]
+    mySprite5 = sprites.create(assets.image`bg3`, SpriteKind.Player)
+    mySprite2 = sprites.create(assets.image`TitleCard`, SpriteKind.Player)
+    mySprite2.setVelocity(20, 20)
+    mySprite2.setBounceOnWall(true)
+    mySprite2.setStayInScreen(true)
+    mySprite2.setPosition(82, 55)
 }
-let mySprite = 0
-music.play(music.createSong(hex`00780004080200`), music.PlaybackMode.UntilDone)
-let OliverOink = sprites.create(img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . 7 . . . . 
-    . . . . . 7 . . . . . 7 . . . . 
-    . . . . . 7 . . . . . 7 . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . 7 . . . . . . . . . 7 . . 
-    . . . 7 7 . . . . . . . 7 . . . 
-    . . . . 7 7 . . . . . . 7 . . . 
-    . . . . . . 7 7 7 7 7 7 . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    `, SpriteKind.Player)
-Render.move(OliverOink, 60)
-let ScoreGrid: number[] = []
+function map () {
+	
+}
+let wordHeight: number[] = []
+let mySprite2: Sprite = null
+let mySprite5: Sprite = null
+let words: Sprite[] = []
+let words5: Sprite = null
+let words4: Sprite = null
+let words3: Sprite = null
+let words2: Sprite = null
+let words1: Sprite = null
+let mySprite3: Sprite = null
+music.play(music.createSong(hex`0078000408020300001c00010a006400f401640000040000000000000000000000000005000004370000000400012908000c0002252910001400012924002800012228002c0001252c003000012930003400012538003c0001253c004000012205001c000f0a006400f4010a0000040000000000000000000000000000000002060018001c00012906001c00010a006400f4016400000400000000000000000000000000000000023e000000040002111e0c00100002111e1000140002111e18001c0002142020002400020f1d24002800020f1d30003400011d34003800011238003c00030f1d20`), music.PlaybackMode.LoopingInBackground)
 scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
@@ -146,13 +155,42 @@ scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     `)
-for (let index = 0; index < 4; index++) {
-    for (let index = 0; index < 4; index++) {
-    	
+tiles.setCurrentTilemap(tilemap`level4`)
+let OliverOink = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . 7 . . . . 
+    . . . . . 7 . . . . . 7 . . . . 
+    . . . . . 7 . . . . . 7 . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . 7 . . . . . . . . . 7 . . 
+    . . . 7 7 . . . . . . . 7 . . . 
+    . . . . 7 7 . . . . . . 7 . . . 
+    . . . . . . 7 7 7 7 7 7 . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Player)
+OliverOink = Render.getRenderSpriteVariable()
+Render.move(OliverOink, 60)
+Render.setViewMode(ViewMode.raycastingView)
+Render.toggleViewMode()
+makeBg()
+game.onUpdateInterval(2000, function () {
+    wordHeight = [
+    22,
+    28,
+    34,
+    40,
+    46
+    ]
+    for (let value of words) {
+        value.setPosition(80, wordHeight.removeAt(randint(0, wordHeight.length)))
     }
-}
-let mySprite2 = sprites.create(assets.image`TitleCard`, SpriteKind.Player)
-mySprite2.setPosition(82, 55)
-mySprite2.setVelocity(50, 50)
-mySprite2.setBounceOnWall(true)
-Render.setViewMode(ViewMode.tilemapView)
+})
+forever(function () {
+    music.play(music.createSoundEffect(WaveShape.Sine, 3205, 2849, 54, 50, 50, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.UntilDone)
+})
